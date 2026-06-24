@@ -1,7 +1,12 @@
-import "../global.css";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 
-import { Slot } from "expo-router";
+export const unstable_settings = {
+  // Ensure any route can link back to `/`
+  initialRouteName: "onboarding",
+  homeRouteName: "onboarding",
+};
 
 export default function Layout() {
-  return <Slot />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

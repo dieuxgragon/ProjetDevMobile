@@ -7,10 +7,9 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router",
-      "expo-status-bar"
+      "expo-router"
     ],
-    "name": "YnovTravelApp",
-    "slug": "YnovTravelApp"
+    "name": "RecipeApp",
+    "slug": "RecipeApp"
   }
 }
