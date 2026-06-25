@@ -26,6 +26,7 @@ interface SliderProps {
 }
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
+const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 export function Slider({ items, onComplete }: SliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,7 +57,7 @@ export function Slider({ items, onComplete }: SliderProps) {
           <View
             key={item.id}
             className="flex-1 w-full h-full"
-            style={{ width: WINDOW_WIDTH }}
+            style={{ width: WINDOW_WIDTH, height: WINDOW_HEIGHT-20, paddingBottom: 20 }}
           >
             <Animated.View
               entering={FadeIn.delay(index * 800)}
@@ -112,14 +113,7 @@ export function Slider({ items, onComplete }: SliderProps) {
         )}
       />
       <View className="flex-row pb-8 justify-center items-center gap-4 absolute bottom-0 left-0 right-0">
-        {items.map((_, index) => (
-          <Animated.View
-            entering={FadeIn.duration(1000)}
-            exiting={FadeOut.duration(1000)}
-            key={`dot-${index}-${currentIndex}`}
-            className={`w-2 h-2 rounded-full ${currentIndex === index ? "bg-white" : "bg-white/50"}`}
-          />
-        ))}
+        
       </View>
     </>
   );
