@@ -29,11 +29,17 @@ const WINDOW_WIDTH = Dimensions.get("window").width;
 
 export function Slider({ items, onComplete }: SliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     setCurrentIndex(
       Math.round(event.nativeEvent.contentOffset.x / WINDOW_WIDTH),
     );
+  };
+
+  const handleGetStarted = () => {
+    setIsExiting(true);
+    setTimeout(() => { onComplete(); }, 5000);
   };
 
   return (
@@ -45,6 +51,7 @@ export function Slider({ items, onComplete }: SliderProps) {
         onScroll={handleScroll}
         scrollEventThrottle={16}
         data={items}
+        extraData={currentIndex}
         renderItem={({ item, index }) => (
           <View
             key={item.id}
@@ -73,13 +80,17 @@ export function Slider({ items, onComplete }: SliderProps) {
               }}
             >
               <View className="flex-1 justify-center items-center gap-[40px]">
-                <Animated.Image
-                  key={currentIndex === index ? `logo-active-${item.id}` : `logo-inactive-${item.id}`}
-                  entering={PinwheelIn.duration(5000)}
-                  exiting={PinwheelOut.duration(5000)}
-                  source={require("../../assets/assiettes tournantes.png")}
-                  className="w-[400px] h-[400px] object-contain"
-                />
+                {!isExiting ? (
+                  <Animated.Image
+                    key={currentIndex === index ? `logo-active-${item.id}` : `logo-inactive-${item.id}`}
+                    entering={PinwheelIn.duration(5000)}
+                    exiting={PinwheelOut.duration(5000)}
+                    source={require("../../assets/assiettes tournantes.png")}
+                    className="w-[400px] h-[400px] object-contain"
+                  />
+                ) : (
+                  <View style={{ width: 400, height: 400 }} />
+                )}
                 <Text className="text-[#291C0E] text-lg text-center text-2xl font-bold">
                   {item.title}
                 </Text>
@@ -87,7 +98,7 @@ export function Slider({ items, onComplete }: SliderProps) {
                   {item.text}
                 </Text>
                 {index === items.length - 1 && (
-                  <TouchableOpacity onPress={onComplete}>
+                  <TouchableOpacity onPress={handleGetStarted}>
                     <View className="bg-[#6E473B] px-25 py-4 rounded-4xl">
                       <Text className="text-white text-lg text-center font-bold">
                         {"Get Started"}
