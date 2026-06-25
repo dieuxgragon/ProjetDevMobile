@@ -10,6 +10,13 @@
       "expo-router"
     ],
     "name": "RecipeApp",
-    "slug": "RecipeApp"
+    "slug": "recipe-app",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d34d0c0b-e4b7-4bcb-9ff4-2caa7d9657c2"
+      }
+    },
+    "owner": "korid-team"
   }
 }
