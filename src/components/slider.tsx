@@ -84,7 +84,7 @@ export function Slider({ items, onComplete }: SliderProps) {
                   <Animated.Image
                     key={currentIndex === index ? `logo-active-${item.id}` : `logo-inactive-${item.id}`}
                     entering={PinwheelIn.duration(5000)}
-                    exiting={PinwheelOut.duration(5000)}
+                    exiting={PinwheelOut.duration(3000)}
                     source={require("../../assets/assiettes tournantes.png")}
                     className="w-[400px] h-[400px] object-contain"
                   />
@@ -94,7 +94,7 @@ export function Slider({ items, onComplete }: SliderProps) {
                 <Text className="text-[#291C0E] text-lg text-center text-2xl font-bold">
                   {item.title}
                 </Text>
-                <Text className="w-[200px] h-[100px] text-[#C6BEB3] text-base text-center">
+                <Text className="w-[180px] h-[100px] text-[#C6BEB3] text-base text-center">
                   {item.text}
                 </Text>
                 {index === items.length - 1 && (
