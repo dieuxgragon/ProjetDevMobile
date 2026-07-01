@@ -1,10 +1,12 @@
+// @ts-ignore: CSS import type declarations missing
 import "../../global.css";
-import { NativeTabs, Icon } from "expo-router/unstable-native-tabs";
+import { NativeTabs, Icon, Label } from "expo-router/unstable-native-tabs";
 
 export default function Layout() {
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="index">
+        <Label>Home</Label>
         <Icon
           sf={{ default: 'house', selected: 'house.fill' }}
           androidSrc={require('../../../assets/icons/Home.png')}
@@ -14,7 +16,7 @@ export default function Layout() {
       <NativeTabs.Trigger name="favoris">
         <Icon
           sf={{ default: 'heart', selected: 'heart.fill' }}
-          androidSrc={require('../../../assets/icons/Path_33961.png')}
+          androidSrc={require('../../../assets/icons/Path_33961(2).png')}
         />
       </NativeTabs.Trigger>
 

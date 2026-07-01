@@ -34,5 +34,5 @@ npx expo install --fix
 ## Pour lancer l'émulation
 
 ```sh
-npm start -- --clear
+pnpm start -- --clear
 ```

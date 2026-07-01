@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@expo/ui": "0.2.0-canary-20260121-a63c0dd",
     "@primer/octicons-react": "^19.29.1",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-vector-icons/get-image": "^13.0.0",
+    "@react-native-vector-icons/material-design-icons": "^13.1.2",
     "expo": "^54.0.35",
     "expo-constants": "~18.0.13",
     "expo-linear-gradient": "~15.0.8",
