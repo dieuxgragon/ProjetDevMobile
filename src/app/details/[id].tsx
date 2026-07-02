@@ -94,9 +94,9 @@ export default function Details() {
               <TouchableOpacity onPress={handleLike} className="flex-row items-center">
                 <View
                   className="w-7 h-7 rounded-full items-center justify-center mr-2"
-                  style={{ backgroundColor: liked ? "#B5493C" : "#F3E5DE" }}
+                  style={{ backgroundColor: liked ? "#B5493C" : "#FFFFFF" }}
                 >
-                  <Text style={{ color: liked ? "#FFFFFF" : "#B5493C" }}>{"♥"}</Text>
+                  <Text style={{ color: liked ? "#FFFFFF" : "#B5493C" }}>{<Image source={require('../../../assets/icons/heart_filled.png')} style={{ width: 15, height: 15 }} />}</Text>
                 </View>
                 <Text className="text-[#7B3F2E] font-bold">{likesCount} Likes</Text>
               </TouchableOpacity>

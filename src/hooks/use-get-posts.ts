@@ -12,7 +12,7 @@ const getRecipes = async (): Promise<RecipeSearchResult[]> => {
   const { url, headers } = buildOAuth1Request({
     method: 'recipes.search',
     format: 'json',
-    max_results: '10',
+    max_results: '25',
   });
 
   const response = await fetch(url, { headers });
