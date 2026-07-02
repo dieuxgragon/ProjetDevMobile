@@ -1,38 +1,78 @@
-# Expo Router and Uniwind 
+# RecipeApp
 
-Use [Expo Router](https://docs.expo.dev/router/introduction/) with [Uniwind](https://docs.uniwind.dev/) styling.
+Application mobile de recettes de cuisine développée avec React Native et Expo.
 
-## Launch your own
+## Aperçu
 
-[![Launch with Expo](https://github.com/expo/examples/blob/master/.gh-assets/launch.svg?raw=true)](https://launch.expo.dev/?github=https://github.com/expo/examples/tree/master/with-router-uniwind)
+RecipeApp permet aux utilisateurs de découvrir, rechercher et consulter des recettes de cuisine. Les données proviennent de l'API FatSecret via une authentification OAuth 1.0.
 
-## 🚀 How to use
+## Fonctionnalités
 
-```sh
-npx create-expo-app -e with-router-uniwind
-```
+- **Accueil** — grille de recettes recommandées avec filtres par catégorie
+- **Recherche** — barre de recherche intégrée
+- **Détail recette** — image, description, liste d'ingrédients et étapes de préparation
+- **Favoris** — sauvegarde locale des recettes aimées
+- **Notifications** — système de notifications push
+- **Profil** — page utilisateur
+- **Onboarding** — écran d'accueil au premier lancement
 
-## Deploy
+## Stack technique
 
-Deploy on all platforms with Expo Application Services (EAS).
+| Technologie | Version | Rôle |
+|---|---|---|
+| React Native | 0.81.5 | Framework mobile |
+| Expo | 54 | Toolchain & modules natifs |
+| Expo Router | 6 | Navigation par fichiers |
+| TanStack Query | 5 | Gestion des requêtes et cache |
+| Uniwind / Tailwind | 4 | Styles utilitaires |
+| AsyncStorage | 2 | Persistance locale |
+| FatSecret API | v1 (OAuth 1.0) | Source de données recettes |
 
-- Deploy the website: `npx eas-cli deploy` — [Learn more](https://docs.expo.dev/eas/hosting/get-started/)
-- Deploy on iOS and Android using: `npx eas-cli build` — [Learn more](https://expo.dev/eas)
+## Prérequis
+
+- Node.js 18+
+- pnpm
+- Expo Go (iOS / Android) ou un émulateur
 
 ## Installation
 
 ```sh
-npm install npx
-npx expo install 
-npx expo install --fix
-npm install react@19.2.7
-npm install expo@^54.0.0
-npx expo install @react-native-async-storage/async-storage
-npx expo install --fix
+pnpm install
 ```
 
-## Pour lancer l'émulation
+## Lancement
 
 ```sh
 pnpm start -- --clear
+```
+
+Scanner le QR code avec Expo Go ou appuyer sur `a` (Android) / `i` (iOS) pour ouvrir sur un émulateur.
+
+## Configuration API
+
+Les credentials FatSecret OAuth 1.0 sont définis dans `src/hooks/user-authentificate.tsx` :
+
+```ts
+const CONSUMER_KEY = 'votre_consumer_key';
+const CONSUMER_SECRET = 'votre_consumer_secret';
+```
+
+Créer un compte et générer des credentials OAuth 1.0 sur [platform.fatsecret.com](https://platform.fatsecret.com).
+
+## Structure du projet
+
+```
+src/
+├── app/
+│   ├── (tabs)/          # Pages principales (Home, Favoris, Create, Notifications, Profile)
+│   ├── details/[id].tsx # Page de détail d'une recette
+│   └── onboarding.tsx   # Écran d'accueil
+├── hooks/
+│   ├── user-authentificate.tsx   # Signature OAuth 1.0 (HMAC-SHA1)
+│   ├── use-get-posts.ts          # Récupération de la liste de recettes
+│   ├── use-get-post-by-id.ts     # Récupération d'une recette par ID
+│   ├── use-async-storage.ts      # Hook AsyncStorage
+│   └── use-notification.ts      # Gestion des notifications
+└── components/
+    └── slider.tsx
 ```
