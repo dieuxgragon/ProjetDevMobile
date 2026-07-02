@@ -37,12 +37,14 @@ const MOCK_RECIPE: Recipe = {
   ],
 };
 
+
+  const WINDOW_WIDTH = Dimensions.get("window").width;
+  const WINDOW_HEIGHT = Dimensions.get("window").height;
+
 export default function Details() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  const WINDOW_WIDTH = Dimensions.get("window").width;
-  const WINDOW_HEIGHT = Dimensions.get("window").height;
 
   const handleBack = () => {
     router.back();
@@ -56,6 +58,7 @@ export default function Details() {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
 
+  // like 
   const handleLike = () => {
     if (liked) {
       setLiked(false);
@@ -65,7 +68,8 @@ export default function Details() {
       setLikesCount((prev) => prev + 1);
     }
   };
-
+  
+  // Fetch recipe data from API
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
@@ -102,36 +106,27 @@ export default function Details() {
     }
   }, [id]);
 
-  const ROW_HEIGHT = 48;
-  const VISIBLE_ROWS = 4;
-  const LIST_HEIGHT = ROW_HEIGHT * VISIBLE_ROWS;
-
+  // Render the component
   return (
     <View className="flex-1 bg-white">
-      <View style={{ width: WINDOW_WIDTH, height: WINDOW_HEIGHT * 0.42 }}>
+      <View className="absolute top-0 left-0 right-0">
         <Image
           source={require("../../../assets/Food_Goodcorner.png")}
-          style={{ width: WINDOW_WIDTH, height: WINDOW_HEIGHT * 0.42 }}
+          style={{ width: WINDOW_WIDTH, height: WINDOW_HEIGHT * 0.5 }}
           resizeMode="cover"
         />
-
-        <TouchableOpacity
-          onPress={handleBack}
-          className="absolute top-12 left-4 w-9 h-9 rounded-full bg-white/80 items-center justify-center"
-        >
-          <Text className="text-[#3A2B25] text-lg font-bold">{"‹"}</Text>
-        </TouchableOpacity>
       </View>
 
-      <View className="flex-1 -mt-8 bg-white rounded-t-3xl px-6 pt-3">
-        <View className="w-10 h-1.5 rounded-full bg-gray-200 self-center mb-4" />
 
-        {loading ? (
-          <View className="flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color="#7B3F2E" />
-          </View>
-        ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
+
+      {loading ? (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#7B3F2E" />
+        </View>
+      ) : (
+        <ScrollView>
+          <View className="flex-1 -mt-8 bg-white rounded-t-3xl px-6 pt-3" style={{ marginTop: WINDOW_HEIGHT * 0.42, paddingBottom: 500}}>
+            <View className="w-10 h-1.5 rounded-full bg-gray-200 self-center mb-4" />
             {usingMockData && (
               <View className="bg-yellow-50 rounded-lg px-3 py-2 mb-3">
                 <Text className="text-yellow-700 text-xs">
@@ -190,15 +185,12 @@ export default function Details() {
               </Text>
             </View>
 
-            <View style={{ height: LIST_HEIGHT }}>
-              <FlatList
+            <FlatList
                 data={ingredients}
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
-                snapToInterval={ROW_HEIGHT}
-                decelerationRate="fast"
                 renderItem={({ item }) => (
-                  <View style={{ height: ROW_HEIGHT }} className="justify-center">
+                  <View className="justify-center">
                     <Text className="text-[#3A2B25] text-base">
                       {item.quantity ? `${item.quantity} ` : ""}
                       {item.name}
@@ -206,10 +198,15 @@ export default function Details() {
                   </View>
                 )}
               />
-            </View>
-          </ScrollView>
-        )}
-      </View>
+          </View>
+        </ScrollView>
+      )}
+      <TouchableOpacity
+          onPress={handleBack}
+          className="absolute top-12 left-4 w-9 h-9 rounded-full bg-white/80 items-center justify-center"
+        >
+          <Text className="text-[#3A2B25] text-lg font-bold">{"‹"}</Text>
+        </TouchableOpacity>
     </View>
   );
 }
