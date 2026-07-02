@@ -1,35 +1,60 @@
 import { useQuery } from "@tanstack/react-query";
+import { useAsyncStorage } from "./use-async-storage";
 
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
+export interface FatSecretIngredient {
+  food_id: string;
+  food_name: string;
+  serving_id: string;
+  number_of_units: string;
+  measurement_description: string;
+  ingredient_url: string;
+  ingredient_description: string;
 }
 
-const getPostById = async (id: string): Promise<Post> => {
-  try {
-    const response = await fetch(
-      'https://fatsecret4.p.rapidapi.com/rest/server.api?recipe_id=${id}&format=json&method=recipe.get.v2',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-rapidapi-key': '0d176db69dmsh8c69e4e9ac832c0p1ebcacjsnabdd7baa245d',
-          'x-rapidapi-host': 'fatsecret4.p.rapidapi.com'
-        }
-      }
-    );
-    return response.json();
-  } catch (error) {
-    console.error(error);
-    throw error;
+export interface FatSecretDirection {
+  direction_number: string;
+  direction_description: string;
+}
+
+export interface FatSecretRecipe {
+  recipe_id: string;
+  recipe_name: string;
+  recipe_description: string;
+  recipe_url: string;
+  number_of_servings: string;
+  preparation_time_min: string;
+  cooking_time_min: string;
+  rating: string;
+  recipe_types?: { recipe_type: string | string[] };
+  recipe_images?: { recipe_image: string | string[] };
+  ingredients?: { ingredient: FatSecretIngredient | FatSecretIngredient[] };
+  directions?: { direction: FatSecretDirection | FatSecretDirection[] };
+}
+
+const getRecipeById = async (accessToken: string, id: string): Promise<FatSecretRecipe> => {
+  const url = new URL("https://platform.fatsecret.com/rest/recipe/v2");
+  url.searchParams.set("recipe_id", id);
+  url.searchParams.set("format", "json");
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch recipe: ${response.status}`);
   }
+
+  const data = await response.json();
+  return data.recipe;
 };
 
 export function useGetPostById(id: string) {
-  return useQuery<Post, Error>({
-    queryKey: ["post", id],
-    queryFn: () => getPostById(id),
-    enabled: Boolean(id),
+  const [accessToken] = useAsyncStorage("accessToken", "");
+  return useQuery<FatSecretRecipe, Error>({
+    queryKey: ["recipe", id],
+    queryFn: () => getRecipeById(accessToken || "", id),
+    enabled: Boolean(accessToken) && Boolean(id),
   });
 }

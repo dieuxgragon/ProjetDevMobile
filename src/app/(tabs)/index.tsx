@@ -1,13 +1,15 @@
 import { Link, useFocusEffect, useRouter } from "expo-router";
-import { Text, TouchableOpacity, View, TextInput, Image } from "react-native";
+import { Text, TouchableOpacity, View, TextInput, Image, Dimensions } from "react-native";
 import { useAsyncStorage } from "../../hooks/use-async-storage";
 import { useCallback, useState } from "react";
-import { Dimensions } from "react-native/Libraries/Utilities/Dimensions";
+import { useGetRecipes } from "../../hooks/use-get-posts";
 
-
+const WINDOW_WIDTH = Dimensions.get("window").width;
 
 export default function App() {
   const router = useRouter();
+  const {data}= useGetRecipes();
+  console.log(data)
   const [
     onboardingCompleted,
     setOnboardingCompleted,
@@ -43,7 +45,7 @@ export default function App() {
       <Text className="text-2xl font-bold text-[#291C0E] mt-4 ">Categories</Text>
 
       <View className="flex-row justify-bet">
-        <TouchableOpacity style={{ backgroundColor: "#6E473B", padding: 10, borderRadius: 32 }} onPress={() => router.push("/details/12345")}>
+        <TouchableOpacity style={{ backgroundColor: "#6E473B", padding: 10, borderRadius: 32 }} onPress={() => router.push("/details/91")}>
           <Text style={{ color: "#F7F6F4", fontSize: 16, fontWeight: "bold" }}>All</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ backgroundColor: "#BEB5A9", padding: 10, borderRadius: 32 }} onPress={() => { }}>
@@ -58,8 +60,9 @@ export default function App() {
         <Text className="text-2xl font-bold text-[#BEB5A9] mt-4 ">Personalized</Text>
       </View>
 
-      <View className="flex-row justify-between w-11/12 mt-4 p-2 gap-2 " style={{ width: Dimensions.get('window').width - 40 }}>      
-        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5 }} onPress={() => router.push("/recipes/01")}>
+      <View className="flex-row justify-between w-11/12 mt-4 p-2 gap-2" >
+      
+        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5 }} onPress={() => router.push("/details/91")}>
           <View className="flex-row gap-2 items-center">
             <Image
               style={{ width: 31, height: 31, borderRadius: 11 }}
@@ -69,7 +72,7 @@ export default function App() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5, width: '48%', height: 100 }} onPress={() => router.push("/details/02")}>
+        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5, width: '48%', height: 100 }} onPress={() => router.push("/details/91")}>
           <View className="flex-row gap-2 items-center">
             <Image
               style={{ width: 31, height: 31, borderRadius: 11 }}
@@ -83,4 +86,3 @@ export default function App() {
     </View>
   );
 }
-
