@@ -114,6 +114,10 @@ export default function Details() {
               </Text>
             </View>
 
+            <view className="pb-4 border-b border-gray-100">
+              
+            </view>
+
             <FlatList
               data={ingredients}
               keyExtractor={(item) => item.food_id}
