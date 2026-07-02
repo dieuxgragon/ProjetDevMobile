@@ -1,24 +1,20 @@
-import { Link, useFocusEffect, useRouter } from "expo-router";
-import { Text, TouchableOpacity, View, TextInput, Image, Dimensions } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { Text, TouchableOpacity, View, TextInput, Image, Dimensions, FlatList, ActivityIndicator } from "react-native";
 import { useAsyncStorage } from "../../hooks/use-async-storage";
 import { useCallback, useState } from "react";
-import { useGetRecipes } from "../../hooks/use-get-posts";
+import { useGetRecipes, RecipeSearchResult } from "../../hooks/use-get-posts";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
+const CARD_WIDTH = (WINDOW_WIDTH * (11 / 12) - 8) / 2;
 
 export default function App() {
   const router = useRouter();
-  const {data}= useGetRecipes();
-  console.log(data)
+  const { data: recipes, isLoading } = useGetRecipes();
   const [
     onboardingCompleted,
-    setOnboardingCompleted,
+    ,
     onboardingCompletedLoading,
   ] = useAsyncStorage("onboardingCompleted", false);
-
-  const clearOnboardingCompleted = () => {
-    setOnboardingCompleted(false);
-  };
 
   const [query, setQuery] = useState('');
 
@@ -30,59 +26,66 @@ export default function App() {
     }, [onboardingCompleted, onboardingCompletedLoading]),
   );
 
-  return (
-    <View className="flex-1 py-8 justify-top items-center gap-4"
-      style={{ paddingTop: 50 }}
+  const renderRecipe = ({ item }: { item: RecipeSearchResult }) => (
+    <TouchableOpacity
+      style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5, width: CARD_WIDTH, marginBottom: 8 }}
+      onPress={() => router.push(`/details/${item.recipe_id}`)}
     >
+      <Image
+        style={{ width: "100%", height: 80, borderRadius: 8, marginBottom: 6 }}
+        source={item.recipe_image ? { uri: item.recipe_image } : require('../../../assets/picture_01.png')}
+        resizeMode="cover"
+      />
+      <Text style={{ color: "#291C0E", fontSize: 13, fontWeight: "bold" }} numberOfLines={2}>
+        {item.recipe_name}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const header = (
+    <View style={{ paddingTop: 50, alignItems: "center", gap: 12 }}>
       <TextInput
-        className="w-11/12 bg-[#F7F6F4] rounded-full px-5 py-3 text-black "
+        className="w-11/12 bg-[#F7F6F4] rounded-full px-5 py-3 text-black"
         placeholder="Search"
         value={query}
         onChangeText={setQuery}
         returnKeyType="search"
         style={{ fontSize: 16 }}
       />
-      <Text className="text-2xl font-bold text-[#291C0E] mt-4 ">Categories</Text>
 
-      <View className="flex-row justify-bet">
-        <TouchableOpacity style={{ backgroundColor: "#6E473B", padding: 10, borderRadius: 32 }} onPress={() => router.push("/details/91")}>
+      <Text className="text-2xl font-bold text-[#291C0E] mt-4">Categories</Text>
+
+      <View style={{ flexDirection: "row", gap: 12 }}>
+        <TouchableOpacity style={{ backgroundColor: "#6E473B", padding: 10, borderRadius: 32 }} onPress={() => {}}>
           <Text style={{ color: "#F7F6F4", fontSize: 16, fontWeight: "bold" }}>All</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ backgroundColor: "#BEB5A9", padding: 10, borderRadius: 32 }} onPress={() => { }}>
+        <TouchableOpacity style={{ backgroundColor: "#BEB5A9", padding: 10, borderRadius: 32 }} onPress={() => {}}>
           <Text style={{ color: "#F7F6F4", fontSize: 16, fontWeight: "bold" }}>Food</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ backgroundColor: "#BEB5A9", padding: 10, borderRadius: 32 }} onPress={() => { }}>
+        <TouchableOpacity style={{ backgroundColor: "#BEB5A9", padding: 10, borderRadius: 32 }} onPress={() => {}}>
           <Text style={{ color: "#F7F6F4", fontSize: 16, fontWeight: "bold" }}>Drink</Text>
         </TouchableOpacity>
       </View>
-      <View className="flex-row justify-between w-11/12 mt-4 p-2 gap-2">
-        <Text className="text-2xl font-bold text-[#291C0E] mt-4 ">Recommendations</Text>
-        <Text className="text-2xl font-bold text-[#BEB5A9] mt-4 ">Personalized</Text>
+
+      <View style={{ flexDirection: "row", justifyContent: "space-between", width: "91.666%", marginTop: 16, paddingHorizontal: 8, gap: 8 }}>
+        <Text className="text-2xl font-bold text-[#291C0E]">Recommendations</Text>
+        <Text className="text-2xl font-bold text-[#BEB5A9]">Personalized</Text>
       </View>
 
-      <View className="flex-row justify-between w-11/12 mt-4 p-2 gap-2" >
-      
-        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5 }} onPress={() => router.push("/details/91")}>
-          <View className="flex-row gap-2 items-center">
-            <Image
-              style={{ width: 31, height: 31, borderRadius: 11 }}
-              source={require('../../../assets/picture_01.png')}
-            />
-            <Text style={{ color: "#291C0E", fontSize: 16, fontWeight: "bold" }}>Name_01</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5, width: '48%', height: 100 }} onPress={() => router.push("/details/91")}>
-          <View className="flex-row gap-2 items-center">
-            <Image
-              style={{ width: 31, height: 31, borderRadius: 11 }}
-              source={require('../../../assets/picture_01.png')}
-            />
-            <Text style={{ color: "#291C0E", fontSize: 16, fontWeight: "bold" }}>Name_02</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-
+      {isLoading && <ActivityIndicator size="large" color="#7B3F2E" style={{ marginTop: 16 }} />}
     </View>
+  );
+
+  return (
+    <FlatList
+      data={isLoading ? [] : (recipes ?? [])}
+      keyExtractor={(item) => item.recipe_id}
+      renderItem={renderRecipe}
+      numColumns={2}
+      ListHeaderComponent={header}
+      columnWrapperStyle={{ gap: 8, paddingHorizontal: WINDOW_WIDTH / 24 }}
+      contentContainerStyle={{ paddingBottom: 24 }}
+      showsVerticalScrollIndicator={false}
+    />
   );
 }

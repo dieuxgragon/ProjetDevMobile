@@ -48,8 +48,9 @@ export default function Details() {
     <View className="flex-1 bg-white">
       <View className="absolute top-0 left-0 right-0">
         <Image
+        
           source={imageUrl ? { uri: imageUrl } : require("../../../assets/Food_Goodcorner.png")}
-          style={{ width: WINDOW_WIDTH, height: WINDOW_HEIGHT * 0.5 }}
+          style={{ width: WINDOW_WIDTH, height: WINDOW_WIDTH }}
           resizeMode="cover"
         />
       </View>

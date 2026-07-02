@@ -1,36 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAsyncStorage } from "./use-async-storage";
+import { useAccessToken } from "./user-authentificate";
 
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
+export interface RecipeSearchResult {
+  recipe_id: string;
+  recipe_name: string;
+  recipe_image?: string;
+  recipe_description?: string;
 }
 
-const getRecipes = async (accessToken: string): Promise<Post[]> => {
-  try {
-    const response = await fetch(
-      `https://platform.fatsecret.com/rest/recipes/search/v3`,
-      {
+const getRecipes = async (accessToken: string): Promise<RecipeSearchResult[]> => {
+  const url = new URL("https://platform.fatsecret.com/rest/recipes/search/v3");
+  url.searchParams.set("format", "json");
+  url.searchParams.set("max_results", "10");
 
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    return response.json();
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const response = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!response.ok) throw new Error(`Failed to fetch recipes: ${response.status}`);
+
+  const data = await response.json();
+  console.log("recipes response:", JSON.stringify(data).slice(0, 300));
+  const recipes = data?.recipes?.recipe;
+  if (!recipes) return [];
+  return Array.isArray(recipes) ? recipes : [recipes];
 };
 
 export function useGetRecipes() {
-  const [accessToken] = useAsyncStorage("accessToken", "");
-  return useQuery<Post[], Error>({
-    queryKey: ["posts"],
-    queryFn: () => getRecipes(accessToken || ""),
+  const { data: accessToken } = useAccessToken();
+  return useQuery<RecipeSearchResult[], Error>({
+    queryKey: ["recipes"],
+    queryFn: () => getRecipes(accessToken!),
     enabled: Boolean(accessToken),
   });
 }

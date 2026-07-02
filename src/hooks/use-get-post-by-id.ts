@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAsyncStorage } from "./use-async-storage";
+import { useAccessToken } from "./user-authentificate";
 
 export interface FatSecretIngredient {
   food_id: string;
@@ -37,24 +37,21 @@ const getRecipeById = async (accessToken: string, id: string): Promise<FatSecret
   url.searchParams.set("format", "json");
 
   const response = await fetch(url.toString(), {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch recipe: ${response.status}`);
-  }
+  if (!response.ok) throw new Error(`Failed to fetch recipe: ${response.status}`);
 
   const data = await response.json();
+  console.log("recipe response:", JSON.stringify(data).slice(0, 300));
   return data.recipe;
 };
 
 export function useGetPostById(id: string) {
-  const [accessToken] = useAsyncStorage("accessToken", "");
+  const { data: accessToken } = useAccessToken();
   return useQuery<FatSecretRecipe, Error>({
     queryKey: ["recipe", id],
-    queryFn: () => getRecipeById(accessToken || "", id),
+    queryFn: () => getRecipeById(accessToken!, id),
     enabled: Boolean(accessToken) && Boolean(id),
   });
 }
