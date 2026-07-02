@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAccessToken } from "./user-authentificate";
+import { buildOAuth1Request } from "./user-authentificate";
 
 export interface RecipeSearchResult {
   recipe_id: string;
@@ -8,15 +8,14 @@ export interface RecipeSearchResult {
   recipe_description?: string;
 }
 
-const getRecipes = async (accessToken: string): Promise<RecipeSearchResult[]> => {
-  const url = new URL("https://platform.fatsecret.com/rest/recipes/search/v3");
-  url.searchParams.set("format", "json");
-  url.searchParams.set("max_results", "10");
-
-  const response = await fetch(url.toString(), {
-    headers: { Authorization: `Bearer ${accessToken}` },
+const getRecipes = async (): Promise<RecipeSearchResult[]> => {
+  const { url, headers } = buildOAuth1Request({
+    method: 'recipes.search',
+    format: 'json',
+    max_results: '10',
   });
 
+  const response = await fetch(url, { headers });
   if (!response.ok) throw new Error(`Failed to fetch recipes: ${response.status}`);
 
   const data = await response.json();
@@ -27,10 +26,8 @@ const getRecipes = async (accessToken: string): Promise<RecipeSearchResult[]> =>
 };
 
 export function useGetRecipes() {
-  const { data: accessToken } = useAccessToken();
   return useQuery<RecipeSearchResult[], Error>({
     queryKey: ["recipes"],
-    queryFn: () => getRecipes(accessToken!),
-    enabled: Boolean(accessToken),
+    queryFn: getRecipes,
   });
 }

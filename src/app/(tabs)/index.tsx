@@ -9,7 +9,7 @@ const CARD_WIDTH = (WINDOW_WIDTH * (11 / 12) - 8) / 2;
 
 export default function App() {
   const router = useRouter();
-  const { data: recipes, isLoading } = useGetRecipes();
+  const { data: recipes, isLoading, isError, error } = useGetRecipes();
   const [
     onboardingCompleted,
     ,
@@ -73,6 +73,11 @@ export default function App() {
       </View>
 
       {isLoading && <ActivityIndicator size="large" color="#7B3F2E" style={{ marginTop: 16 }} />}
+      {isError && (
+        <Text style={{ color: "red", marginTop: 16, paddingHorizontal: 16 }}>
+          Erreur : {error?.message ?? "inconnue"}
+        </Text>
+      )}
     </View>
   );
 

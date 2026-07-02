@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAccessToken } from "./user-authentificate";
+import { buildOAuth1Request } from "./user-authentificate";
 
 export interface FatSecretIngredient {
   food_id: string;
@@ -31,15 +31,14 @@ export interface FatSecretRecipe {
   directions?: { direction: FatSecretDirection | FatSecretDirection[] };
 }
 
-const getRecipeById = async (accessToken: string, id: string): Promise<FatSecretRecipe> => {
-  const url = new URL("https://platform.fatsecret.com/rest/recipe/v2");
-  url.searchParams.set("recipe_id", id);
-  url.searchParams.set("format", "json");
-
-  const response = await fetch(url.toString(), {
-    headers: { Authorization: `Bearer ${accessToken}` },
+const getRecipeById = async (id: string): Promise<FatSecretRecipe> => {
+  const { url, headers } = buildOAuth1Request({
+    method: 'recipe.get',
+    recipe_id: id,
+    format: 'json',
   });
 
+  const response = await fetch(url, { headers });
   if (!response.ok) throw new Error(`Failed to fetch recipe: ${response.status}`);
 
   const data = await response.json();
@@ -48,10 +47,9 @@ const getRecipeById = async (accessToken: string, id: string): Promise<FatSecret
 };
 
 export function useGetPostById(id: string) {
-  const { data: accessToken } = useAccessToken();
   return useQuery<FatSecretRecipe, Error>({
     queryKey: ["recipe", id],
-    queryFn: () => getRecipeById(accessToken!, id),
-    enabled: Boolean(accessToken) && Boolean(id),
+    queryFn: () => getRecipeById(id),
+    enabled: Boolean(id),
   });
 }

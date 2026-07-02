@@ -45,8 +45,8 @@ export default function Details() {
   const imageUrl = normalizeArray<string>(data?.recipe_images?.recipe_image)[0];
 
   return (
-    <View className="flex-1 bg-white">
-      <View className="absolute top-0 left-0 right-0">
+    <View className="flex-1 bg-white height-full padding-bottom-20">
+      <View className="absolute top-0 left-0 right-0 ">
         <Image
         
           source={imageUrl ? { uri: imageUrl } : require("../../../assets/Food_Goodcorner.png")}
@@ -69,7 +69,7 @@ export default function Details() {
         <ScrollView>
           <View
             className="flex-1 bg-white rounded-t-3xl px-6 pt-3"
-            style={{ marginTop: WINDOW_HEIGHT * 0.42, paddingBottom: 500 }}
+            style={{ marginTop: WINDOW_HEIGHT * 0.42, paddingBottom: 50 }}
           >
             <View className="w-10 h-1.5 rounded-full bg-gray-200 self-center mb-4" />
 
@@ -114,9 +114,9 @@ export default function Details() {
               </Text>
             </View>
 
-            <view className="pb-4 border-b border-gray-100">
+            <View className="pb-4 border-b border-gray-100">
               
-            </view>
+            </View>
 
             <FlatList
               data={ingredients}
