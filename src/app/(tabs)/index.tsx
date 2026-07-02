@@ -1,7 +1,10 @@
 import { Link, useFocusEffect, useRouter } from "expo-router";
-import { Text, TouchableOpacity, View, Button, TextInput } from "react-native";
+import { Text, TouchableOpacity, View, TextInput, Image } from "react-native";
 import { useAsyncStorage } from "../../hooks/use-async-storage";
 import { useCallback, useState } from "react";
+import { Dimensions } from "react-native/Libraries/Utilities/Dimensions";
+
+
 
 export default function App() {
   const router = useRouter();
@@ -37,40 +40,47 @@ export default function App() {
         returnKeyType="search"
         style={{ fontSize: 16 }}
       />
-      <View className="flex-row justify-between w-11/12 mt-4">
-        <Button
-          title="All"
-          color="#6E473B"
-          accessibilityLabel="Learn more about this purple button"
-          onPress={() => { }}
-        />
-        <Button
-          onPress={() => { }}
-          title="Food"
-          color="#F7F6F4"
-          textColor="#BEB5A9"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          onPress={() => { }}
-          title="Drinks"
-          color="#F7F6F4"
-          textColor="#BEB5A9"
-          accessibilityLabel="Learn more about this purple button"
-        />
+      <Text className="text-2xl font-bold text-[#291C0E] mt-4 ">Categories</Text>
+
+      <View className="flex-row justify-bet">
+        <TouchableOpacity style={{ backgroundColor: "#6E473B", padding: 10, borderRadius: 32 }} onPress={() => router.push("/details/12345")}>
+          <Text style={{ color: "#F7F6F4", fontSize: 16, fontWeight: "bold" }}>All</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ backgroundColor: "#BEB5A9", padding: 10, borderRadius: 32 }} onPress={() => { }}>
+          <Text style={{ color: "#F7F6F4", fontSize: 16, fontWeight: "bold" }}>Food</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ backgroundColor: "#BEB5A9", padding: 10, borderRadius: 32 }} onPress={() => { }}>
+          <Text style={{ color: "#F7F6F4", fontSize: 16, fontWeight: "bold" }}>Drink</Text>
+        </TouchableOpacity>
+      </View>
+      <View className="flex-row justify-between w-11/12 mt-4 p-2 gap-2">
+        <Text className="text-2xl font-bold text-[#291C0E] mt-4 ">Recommendations</Text>
+        <Text className="text-2xl font-bold text-[#BEB5A9] mt-4 ">Personalized</Text>
       </View>
 
-
-      <Link href="/details/12345" asChild>
-        <TouchableOpacity className="bg-blue-500 px-8 py-4 rounded-md">
-          <Text className="text-white text-md font-bold">{"Details"}</Text>
+      <View className="flex-row justify-between w-11/12 mt-4 p-2 gap-2 " style={{ width: Dimensions.get('window').width - 40 }}>      
+        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5 }} onPress={() => router.push("/recipes/01")}>
+          <View className="flex-row gap-2 items-center">
+            <Image
+              style={{ width: 31, height: 31, borderRadius: 11 }}
+              source={require('../../../assets/picture_01.png')}
+            />
+            <Text style={{ color: "#291C0E", fontSize: 16, fontWeight: "bold" }}>Name_01</Text>
+          </View>
         </TouchableOpacity>
-      </Link>
-      <TouchableOpacity onPress={clearOnboardingCompleted}>
-        <Text className="text-black text-md font-bold">
-          {"Clear Onboarding Completed"}
-        </Text>
-      </TouchableOpacity>
+
+        <TouchableOpacity style={{ backgroundColor: "#fffbf6", padding: 10, borderRadius: 5, width: '48%', height: 100 }} onPress={() => router.push("/details/02")}>
+          <View className="flex-row gap-2 items-center">
+            <Image
+              style={{ width: 31, height: 31, borderRadius: 11 }}
+              source={require('../../../assets/picture_01.png')}
+            />
+            <Text style={{ color: "#291C0E", fontSize: 16, fontWeight: "bold" }}>Name_02</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 }
+

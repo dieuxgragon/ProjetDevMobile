@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { useAsyncStorage } from "../../hooks/use-async-storage";
 import { useCallback } from "react";
 
-export default function App() {
+export default function Home() {
   const router = useRouter();
   const [
     onboardingCompleted,
