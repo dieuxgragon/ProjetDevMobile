@@ -6,8 +6,10 @@
     "web": {
       "output": "static"
     },
+    "newArchEnabled": true,
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-vector-icons/material-design-icons"
     ],
     "name": "RecipeApp",
     "slug": "recipe-app",
